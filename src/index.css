@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+@theme {
+    --color-eco-blue: #03285b;
+    --color-eco-blue-dark: #021c40;
+    --color-eco-cream: #f4efe6;
+    --color-eco-cream-light: #fbf7ee;
+    --color-eco-green: #a8cf45;
+    --color-eco-gray: #59616e;
+    --color-eco-gray-light: #667080;
+
+    --font-sora: "Sora", sans-serif;
+    --font-inter: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: #f4efe6;
+}
+
