@@ -2,6 +2,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import NavBar from "./components/NavBar"
 import Home from "./pages/Home"
+import Sobre from "./pages/Sobre"
 import Cronograma from "./pages/Cronograma"
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home/>}/>
+          <Route path="/sobre" element={<Sobre/>}/>
           <Route path="/cronograma" element={<Cronograma/>}/>
         </Routes>
       </main>
