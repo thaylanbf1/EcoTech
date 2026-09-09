@@ -1,0 +1,116 @@
+export type TipoAtividade = "Palestra" | "Minicurso" | "Intervalo";
+
+export interface Atividade {
+  dia: 1 | 2;
+  horario: string;
+  atividade: string;
+  palestrante: string;
+  local: string;
+  tipo: TipoAtividade;
+}
+
+
+export const PROGRAMACAO: Atividade[] = [
+  {
+    dia: 1,
+    horario: "09:00 - 10:00",
+    atividade: "Abertura Oficial do Evento",
+    palestrante: "Comissão Organizadora",
+    local: "SALA 05",
+    tipo: "Palestra",
+  },
+  {
+    dia: 1,
+    horario: "10:15 - 11:45",
+    atividade: "Desafios da Tecnologia na Metrópole Amazônica",
+    palestrante: "Anderson Costa",
+    local: "SALA 05",
+    tipo: "Palestra",
+  },
+  {
+    dia: 1,
+    horario: "12:00 - 13:00",
+    atividade: "Intervalo para almoço",
+    palestrante: "-",
+    local: "-",
+    tipo: "Intervalo",
+  },
+  {
+    dia: 1,
+    horario: "13:15 - 15:00",
+    atividade: "Testes Automatizados na prática",
+    palestrante: "Italo Di Paolo",
+    local: "LAB INFO",
+    tipo: "Minicurso",
+  },
+  {
+    dia: 1,
+    horario: "13:15 - 15:00",
+    atividade: "Introdução a Cloud Native",
+    palestrante: "Jorge Hermes",
+    local: "SALA 03",
+    tipo: "Minicurso",
+  },
+  {
+    dia: 1,
+    horario: "15:00 - 15:45",
+    atividade: "Arquiteturas para startups regionais",
+    palestrante: "Marco Reus",
+    local: "SALA 02",
+    tipo: "Palestra",
+  },
+  {
+    dia: 2,
+    horario: "09:00 - 10:00",
+    atividade: "Abertura Oficial do Evento",
+    palestrante: "Comissão Organizadora",
+    local: "SALA 05",
+    tipo: "Palestra",
+  },
+  {
+    dia: 2,
+    horario: "10:15 - 11:45",
+    atividade: "Desafios da Tecnologia na Metrópole Amazônica",
+    palestrante: "Anderson Costa",
+    local: "SALA 05",
+    tipo: "Palestra",
+  },
+  {
+    dia: 2,
+    horario: "12:00 - 13:00",
+    atividade: "Intervalo para almoço",
+    palestrante: "-",
+    local: "-",
+    tipo: "Intervalo",
+  },
+  {
+    dia: 2,
+    horario: "13:15 - 15:00",
+    atividade: "Testes Automatizados na prática",
+    palestrante: "Italo Di Paolo",
+    local: "LAB INFO",
+    tipo: "Minicurso",
+  },
+  {
+    dia: 2,
+    horario: "13:15 - 15:00",
+    atividade: "Introdução a Cloud Native",
+    palestrante: "Jorge Hermes",
+    local: "SALA 03",
+    tipo: "Minicurso",
+  },
+  {
+    dia: 2,
+    horario: "15:00 - 15:45",
+    atividade: "Arquiteturas para startups regionais",
+    palestrante: "Marco Reus",
+    local: "SALA 02",
+    tipo: "Palestra",
+  },
+];
+
+export const CORES_TIPO: Record<TipoAtividade, string> = {
+  Palestra: "border-eco-blue text-eco-blue bg-transparent",
+  Minicurso: "bg-eco-green text-white border-eco-green",
+  Intervalo: "border-eco-blue text-eco-blue bg-transparent",
+};
