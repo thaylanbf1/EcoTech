@@ -1,0 +1,91 @@
+import { MapPin, Car, Bus, Footprints, type LucideIcon } from "lucide-react";
+import { Button } from "primereact/button";
+
+// Cada ícone do lucide-react é, na prática, um componente React. O tipo
+// `LucideIcon` (exportado pela própria biblioteca) descreve exatamente
+// essa "forma" de componente — por isso conseguimos guardá-lo dentro de
+// um objeto e renderizá-lo depois como <Icon ... /> no JSX.
+interface Transporte {
+  icon: LucideIcon;
+  label: string;
+}
+
+// Extraímos a lista de opções de transporte em um array de dados. Isso
+// evita repetir o mesmo JSX três vezes: apenas mapeamos (.map) o array.
+const TRANSPORTES: Transporte[] = [
+  { icon: Car, label: "De carro" },
+  { icon: Bus, label: "Transporte público" },
+  { icon: Footprints, label: "A pé" },
+];
+
+export default function Local() {
+  return (
+    <section className="min-h-[70vh] bg-eco-cream px-6 py-24">
+      <div className="mx-auto max-w-6xl text-center">
+        <h1 className="font-sora text-4xl font-bold text-esa-blue lg:text-5xl">
+          Onde o evento acontece
+        </h1>
+        <p className="font-sora mx-auto mt-6 max-w-2xl text-lg text-eco-gray">
+          Confira o endereço completo, o mapa e as opções de acesso até a
+          UEPA — Campus Ananindeua durante os dias do evento.
+        </p>
+
+        <div className="mt-16 grid grid-cols-1 gap-8 text-left lg:grid-cols-2">
+          {/* Card azul com o endereço */}
+          <div className="rounded-3xl bg-eco-blue p-10">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-5 py-2 text-sm font-extrabold text-white">
+              <MapPin size={16} />
+              Ananindeua, Pará
+            </span>
+
+            <h2 className="font-sora mt-6 text-2xl font-bold text-white">
+              Universidade do Estado do Pará
+            </h2>
+            <p className="font-sora mt-5 text-white/90">
+              Campus Ananindeua — Rod. BR-316, s/n
+              <br />
+              Ananindeua – PA, CEP 67030-005
+            </p>
+            <p className="font-sora mt-5 text-sm text-white/70">
+              Evento presencial • 15 a 18 de Outubro
+            </p>
+
+            <Button
+              label="Ver no mapa"
+              className="mt-8 rounded-full bg-white px-6 py-3 font-sora font-bold text-eco-blue"
+            />
+          </div>
+
+          {/* Card do mapa (placeholder — pronto para trocar por um
+              componente real de mapa, ex: Google Maps ou Leaflet) */}
+          <div className="flex flex-col items-center justify-center rounded-3xl border-2 border-eco-blue bg-white p-10 text-center">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-eco-blue/10">
+              <MapPin size={48} className="text-eco-blue" />
+            </div>
+            <h3 className="font-sora mt-6 text-xl font-bold text-eco-blue">
+              Mapa interativo em breve
+            </h3>
+            <p className="mt-2 max-w-sm text-sm text-eco-gray-light">
+              Toque em "Ver no mapa" para abrir a localização no Google Maps
+            </p>
+          </div>
+        </div>
+
+        {/* Pílulas de transporte — desestruturamos "icon" renomeando
+            para "Icon" (maiúscula), porque no JSX apenas identificadores
+            que começam com letra maiúscula são tratados como componente. */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          {TRANSPORTES.map(({ icon: Icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-eco-blue px-6 py-3 font-sora font-bold text-eco-blue"
+            >
+              <Icon size={18} />
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
