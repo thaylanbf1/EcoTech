@@ -12,7 +12,7 @@ const NavBar = () => {
       <div className="mx-auto flex h-20.5 max-w-7xl items-center justify-between px-6">
         {/* Logo + nome do evento */}
         <div className="flex items-center gap-3">
-          <img src={ecoLogo} alt="Logo ESA" className="h-20 w-20" />
+          <img src={ecoLogo} alt="Logo ESA" className="h-6 w-6" />
           <span className="font-inter text-lg font-black text-eco-cream-light">
             Engenharia de Software na Amazônia
           </span>

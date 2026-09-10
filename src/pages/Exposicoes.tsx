@@ -1,70 +1,7 @@
 import { useState } from "react";
+import { FILTRO_PARA_CATEGORIA, CORES_TAG, FILTROS, TRABALHOS } from "../consts/exposicoes";
+import { type Filtro } from "../types/exposicoes";
 import { Image as ImageIcon } from "lucide-react";
-
-// Union type dos rótulos exibidos nos botões de filtro.
-type Filtro = "Todos" | "Artigos" | "Pôsteres" | "Projetos";
-
-const FILTROS: Filtro[] = ["Todos", "Artigos", "Pôsteres", "Projetos"];
-
-// Union type das categorias reais salvas em cada trabalho (note que
-// "Artigos" no filtro é plural, mas aqui é singular — por isso existe o
-// mapeamento FILTRO_PARA_CATEGORIA abaixo).
-type Categoria = "Artigo" | "Projeto" | "Pôster";
-
-// Mapeia cada filtro para a categoria real usada nos dados. `null`
-// representa "sem filtro" (mostrar tudo). O tipo `Record<Filtro, ...>`
-// garante que todo valor de Filtro tenha uma entrada aqui.
-const FILTRO_PARA_CATEGORIA: Record<Filtro, Categoria | null> = {
-  Todos: null,
-  Artigos: "Artigo",
-  Pôsteres: "Pôster",
-  Projetos: "Projeto",
-};
-
-const CORES_TAG: Record<Categoria, string> = {
-  Artigo: "bg-esa-blue",
-  Projeto: "bg-[#008660]",
-  Pôster: "bg-esa-green",
-};
-
-interface Trabalho {
-  categoria: Categoria;
-  titulo: string;
-  autores: string;
-}
-
-const TRABALHOS: Trabalho[] = [
-  {
-    categoria: "Artigo",
-    titulo: "IA Aplicada ao Monitoramento Ambiental na Amazônia",
-    autores: "L. Fernandes, R. Tavares",
-  },
-  {
-    categoria: "Projeto",
-    titulo: "Sistema de Gestão Acadêmica com Microsserviços",
-    autores: "T. Andrade",
-  },
-  {
-    categoria: "Pôster",
-    titulo: "Análise de Dados Climáticos com Machine Learning",
-    autores: "C. Nogueira, P. Lima",
-  },
-  {
-    categoria: "Projeto",
-    titulo: "App de Acessibilidade para Pessoas com Def. Visual",
-    autores: "M. Rocha",
-  },
-  {
-    categoria: "Artigo",
-    titulo: "Segurança em Redes IoT para Áreas Rurais",
-    autores: "B. Castro",
-  },
-  {
-    categoria: "Pôster",
-    titulo: "Plataforma Colaborativa de Ensino a Distância",
-    autores: "F. Almeida, J. Souza",
-  },
-];
 
 export default function Exposicoes() {
   const [filtroAtivo, setFiltroAtivo] = useState<Filtro>("Todos");
@@ -78,12 +15,12 @@ export default function Exposicoes() {
   );
 
   return (
-    <section className="min-h-[70vh] bg-esa-cream px-6 py-24">
+    <section className="min-h-[70vh] bg-eco-cream px-6 py-24">
       <div className="mx-auto max-w-6xl text-center">
-        <h1 className="font-sora text-4xl font-bold text-esa-blue lg:text-5xl">
+        <h1 className="font-sora text-4xl font-bold text-eco-blue lg:text-5xl">
           Exposições
         </h1>
-        <p className="font-sora mt-4 text-lg text-esa-gray">
+        <p className="font-sora mt-4 text-lg text-eco-gray">
           Confira os trabalhos, artigos e projetos apresentados durante o
           evento.
         </p>
@@ -99,8 +36,8 @@ export default function Exposicoes() {
                 className={`rounded-full px-6 py-2 font-sora text-sm font-bold transition-colors duration-200 ${
                 ativo
                     ? "text-white shadow-sm"
-                    : "border-[1.5px] border-esa-blue text-esa-blue hover:bg-esa-blue/10"
-                }`}
+                    : "border-[1.5px] border-eco-blue text-eco-blue hover:bg-eco-blue/10"
+                } hover:cursor-pointer`}
                 style={ativo ? { backgroundColor: "#0B4F9E" } : undefined}
             >
                 {filtro}
@@ -118,24 +55,24 @@ export default function Exposicoes() {
               key={t.titulo}
               className="rounded-2xl border border-gray-300 bg-white p-3"
             >
-              <div className="relative flex h-[140px] items-center justify-center rounded-xl bg-[#ebf0f7]">
+              <div className="relative flex h-35 items-center justify-center rounded-xl bg-[#ebf0f7]">
                 <span
-                  className={`absolute left-3 top-3 rounded-pill px-3 py-1 text-[11px] font-bold text-white ${
+                  className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold text-white ${
                     CORES_TAG[t.categoria]
                   }`}
                 >
                   {t.categoria}
                 </span>
                 <ImageIcon className="text-[#c7d4e5]" size={40} />
-                <span className="ml-2 text-xs font-bold text-esa-gray-light">
+                <span className="ml-2 text-xs font-bold text-eco-gray-light">
                   BANNER
                 </span>
               </div>
 
-              <h3 className="font-sora mt-4 text-base font-bold text-esa-blue">
+              <h3 className="font-sora mt-4 text-base font-bold text-eco-blue">
                 {t.titulo}
               </h3>
-              <p className="mt-1 text-xs text-esa-gray">{t.autores}</p>
+              <p className="mt-1 text-xs text-eco-gray">{t.autores}</p>
             </article>
           ))}
         </div>
