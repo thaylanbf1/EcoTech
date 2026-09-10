@@ -8,13 +8,14 @@ import ecoLogo from '../assets/exo_logo_branca.png'
 const NavBar = () => {
     const [open, setOpen] = useState<boolean>(false)
   return (
-   <header className="sticky top-0 z-50 bg-eco-blue">
-      <div className="mx-auto flex h-20.5 max-w-7xl items-center justify-between px-6">
+   <header className="sticky top-0 z-50 w-full bg-eco-blue">
+      <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between gap-4 px-6 py-3">
         {/* Logo + nome do evento */}
-        <div className="flex items-center gap-3">
-          <img src={ecoLogo} alt="Logo ESA" className="h-6 w-6" />
+        <div className="flex min-w-0 items-center gap-3">
+          <img src={ecoLogo} alt="Logo ESA" className="h-6 w-6 shrink-0" />
           <span className="font-inter text-lg font-black text-eco-cream-light">
-            Engenharia de Software na Amazônia
+            <span className="sm:hidden">EcoTech</span>
+            <span className="hidden sm:inline">Engenharia de Software na Amazônia</span>
           </span>
         </div>
 
@@ -41,7 +42,7 @@ const NavBar = () => {
 
         {/* Botão hamburger, visível só em telas pequenas */}
         <button
-          className="text-white lg:hidden"
+          className="shrink-0 text-white lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Abrir menu"
         >

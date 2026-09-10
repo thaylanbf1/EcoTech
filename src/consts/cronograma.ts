@@ -102,6 +102,6 @@ export const PROGRAMACAO: Atividade[] = [
 
 export const CORES_TIPO: Record<TipoAtividade, string> = {
   Palestra: "border-eco-blue text-eco-blue bg-transparent",
-  Minicurso: "bg-eco-green text-white border-eco-green",
+  Minicurso: "bg-eco-green-dark text-white border-eco-green-dark",
   Intervalo: "border-eco-blue text-eco-blue bg-transparent",
 };

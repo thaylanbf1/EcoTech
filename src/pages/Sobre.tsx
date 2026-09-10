@@ -19,12 +19,12 @@ const Sobre = () => {
 
   return (
     <section className="min-h-[70vh] bg-eco-cream px-6 py-24">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+      <div className="mx-auto grid w-full min-w-0 max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
         <div>
           <p className="font-sora text-sm font-extrabold uppercase tracking-widest text-eco-green">
             Sobre o evento
           </p>
-          <h1 className="font-sora mt-4 text-4xl font-bold leading-tight text-eco-blue lg:text-5xl">
+          <h1 className="font-sora mt-4 text-3xl font-bold leading-tight text-eco-blue sm:text-4xl lg:text-5xl">
             Um encontro para quem constrói software na região
           </h1>
           <p className="font-sora mt-6 text-lg text-eco-gray">
@@ -37,8 +37,8 @@ const Sobre = () => {
           </p>
         </div>
 
-        <div className="relative rounded-3xl bg-eco-blue px-10 py-10">
-            <div className="w-full overflow-hidden">
+        <div className="relative min-w-0 rounded-3xl bg-eco-blue px-6 py-8 sm:px-10 sm:py-10">
+            <div className="min-w-0 overflow-hidden">
                 <div
                     className="flex transition-transform duration-500 ease-in-out"
                     style={{ transform: `translateX(-${indiceAtivo * 100}%)` }}

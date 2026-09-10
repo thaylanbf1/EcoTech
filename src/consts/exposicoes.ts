@@ -13,8 +13,8 @@ export const FILTRO_PARA_CATEGORIA: Record<Filtro, Categoria | null> = {
 
 export const CORES_TAG: Record<Categoria, string> = {
   Artigo: "bg-eco-blue",
-  Projeto: "bg-eco-green-dark",
-  Pôster: "bg-eco-green",
+  Projeto: "bg-eco-green-light",
+  Pôster: "bg-eco-green-dark",
 };
 
 export const TRABALHOS: Trabalho[] = [
