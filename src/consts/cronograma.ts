@@ -1,13 +1,4 @@
-export type TipoAtividade = "Palestra" | "Minicurso" | "Intervalo";
-
-export interface Atividade {
-  dia: 1 | 2;
-  horario: string;
-  atividade: string;
-  palestrante: string;
-  local: string;
-  tipo: TipoAtividade;
-}
+import type { Atividade, TipoAtividade } from "../types/atividades";
 
 
 export const PROGRAMACAO: Atividade[] = [

@@ -1,4 +1,6 @@
-import { type TipoAtividade, CORES_TIPO } from "../consts/cronograma";
+import type { TipoAtividade } from "../types/atividades";
+import { CORES_TIPO } from "../consts/cronograma";
+
 export interface BadgeProps {
   tipo: TipoAtividade;
 }
