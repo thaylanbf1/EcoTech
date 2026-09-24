@@ -25,3 +25,12 @@ export const ITENS_EVENTO = [
       "Estudantes de computação e áreas afins, profissionais e toda a comunidade tech local. Um espaço para ampliar sua rede, encontrar parceiros e se inspirar.",
   },
 ]
+
+export type AbaSobre = "sobre" | "parceiros" | "patrocinadores" | "acessibilidade"
+
+export const ABAS_SOBRE: { id: AbaSobre; label: string }[] = [
+  { id: "sobre", label: "Sobre o evento" },
+  { id: "parceiros", label: "Parceiros" },
+  { id: "patrocinadores", label: "Patrocinadores" },
+  { id: "acessibilidade", label: "Acessibilidade" },
+]

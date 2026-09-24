@@ -1,12 +1,26 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { LogIn, LogOut, Menu, X } from "lucide-react";
 import { links } from "../consts/navbar";
+import { useAuth } from "../hooks/useAuth";
 import ecoLogo from '../assets/exo_logo_branca.png'
 
 
 const NavBar = () => {
     const [open, setOpen] = useState<boolean>(false)
+    const { usuario, sair } = useAuth()
+    const navigate = useNavigate()
+
+    // Link da área logada: participante vai para a inscrição, admin para o painel
+    const areaLogada = usuario?.perfil === "admin"
+      ? { to: "/admin", label: "Painel" }
+      : { to: "/minha-inscricao", label: "Minha inscrição" }
+
+    const fazerLogout = () => {
+      sair()
+      setOpen(false)
+      navigate("/")
+    }
   return (
    <header className="sticky top-0 z-50 w-full bg-eco-blue">
       <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between gap-8 px-6 py-4 lg:gap-12 lg:px-8">
@@ -38,6 +52,36 @@ const NavBar = () => {
               {link.label}
             </NavLink>
           ))}
+
+          {usuario ? (
+            <div className="flex items-center gap-6">
+              <NavLink
+                to={areaLogada.to}
+                className={({ isActive }) =>
+                  `font-inter pb-2 text-[16px] font-bold text-white transition-opacity hover:opacity-80 ${
+                    isActive ? "border-b-2 border-white" : "border-b-2 border-transparent"
+                  }`
+                }
+              >
+                {areaLogada.label}
+              </NavLink>
+              <button
+                onClick={fazerLogout}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white px-4 py-1.5 font-inter font-bold text-white hover:bg-white/10 cursor-pointer"
+              >
+                <LogOut size={16} />
+                Sair
+              </button>
+            </div>
+          ) : (
+            <NavLink
+              to="/login"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 font-inter font-bold text-eco-blue hover:opacity-90"
+            >
+              <LogIn size={16} />
+              Entrar
+            </NavLink>
+          )}
         </nav>
 
         {/* Botão hamburger, visível só em telas pequenas */}
@@ -67,6 +111,42 @@ const NavBar = () => {
               {link.label}
             </NavLink>
           ))}
+
+          {usuario ? (
+            <>
+              <NavLink
+                to={areaLogada.to}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  `rounded-lg px-3 py-2 font-inter text-white ${
+                    isActive ? "bg-white/10 font-bold" : ""
+                  }`
+                }
+              >
+                {areaLogada.label}
+              </NavLink>
+              <button
+                onClick={fazerLogout}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-left font-inter text-white cursor-pointer"
+              >
+                <LogOut size={16} />
+                Sair
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/login"
+              onClick={() => setOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-2 rounded-lg px-3 py-2 font-inter font-bold text-white ${
+                  isActive ? "bg-white/10" : ""
+                }`
+              }
+            >
+              <LogIn size={16} />
+              Entrar
+            </NavLink>
+          )}
         </nav>
       )}
     </header>

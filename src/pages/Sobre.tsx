@@ -1,8 +1,49 @@
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { ITENS_EVENTO } from "../consts/sobreEvento"
+import { ABAS_SOBRE, ITENS_EVENTO, type AbaSobre } from "../consts/sobreEvento"
+import Parceiros from "./Parceiros"
+import Patrocinadores from "./Patrocinadores"
+import Acessibilidade from "./Acessibilidade"
 
 const Sobre = () => {
+  const [abaAtiva, setAbaAtiva] = useState<AbaSobre>("sobre")
+
+  return (
+    <div className="bg-eco-cream">
+      <nav
+        role="tablist"
+        aria-label="Seções da página Sobre"
+        className="mx-auto flex max-w-6xl flex-wrap justify-center gap-3 px-6 pt-12"
+      >
+        {ABAS_SOBRE.map((aba) => (
+          <button
+            key={aba.id}
+            role="tab"
+            aria-selected={abaAtiva === aba.id}
+            aria-controls="painel-sobre"
+            onClick={() => setAbaAtiva(aba.id)}
+            className={`font-sora rounded-full border-2 border-eco-blue px-5 py-2 text-sm font-bold transition-colors cursor-pointer ${
+              abaAtiva === aba.id
+                ? "bg-eco-blue text-white"
+                : "text-eco-blue hover:bg-eco-blue/10"
+            }`}
+          >
+            {aba.label}
+          </button>
+        ))}
+      </nav>
+
+      <div id="painel-sobre" role="tabpanel">
+        {abaAtiva === "sobre" && <SobreEvento />}
+        {abaAtiva === "parceiros" && <Parceiros />}
+        {abaAtiva === "patrocinadores" && <Patrocinadores />}
+        {abaAtiva === "acessibilidade" && <Acessibilidade />}
+      </div>
+    </div>
+  )
+}
+
+const SobreEvento = () => {
   const [indiceAtivo, setIndiceAtivo] = useState(0)
 
   const irParaAnterior = () => {

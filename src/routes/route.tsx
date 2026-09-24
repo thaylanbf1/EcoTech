@@ -13,6 +13,10 @@ import PerfilPalestrante from "../pages/PerfilPalestrante"
 import Palestras from "../pages/Palestras"
 import PerfilPalestra from "../pages/PerfilPalestras"
 import Acessibilidade from "../pages/Acessibilidade"
+import Login from "../pages/Login"
+import MinhaInscricao from "../pages/MinhaInscricao"
+import PainelAdmin from "../pages/PainelAdmin"
+import RotaProtegida from "./RotaProtegida"
 
 function AppRoutes() {
   const location = useLocation()
@@ -35,6 +39,15 @@ function AppRoutes() {
           <Route path="/palestrantes/:slug" element={<PerfilPalestrante/>}/>
           <Route path="/palestras" element={<Palestras/>}/>
           <Route path="/palestras/:slug" element={<PerfilPalestra/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route
+            path="/minha-inscricao"
+            element={<RotaProtegida perfil="participante"><MinhaInscricao/></RotaProtegida>}
+          />
+          <Route
+            path="/admin"
+            element={<RotaProtegida perfil="admin"><PainelAdmin/></RotaProtegida>}
+          />
         </Routes>
       </main>
       {!isHome && <Footer/>}
