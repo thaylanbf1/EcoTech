@@ -9,7 +9,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-eco-blue pb-24 pt-16 text-white lg:pb-40">
+    <section className="relative overflow-hidden bg-eco-blue pb-24 pt-16 text-white lg:pb-30">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-2 lg:items-center">
             <div>
                 <div className="flex flex-wrap gap-2">
@@ -23,11 +23,14 @@ const Home = () => {
                 </span>
 
                 </div>
-
-                <h1 className="font-sora mt-8 text-2xl font-extrabold leading-tight sm:text-3xl lg:text-4xl">
-                    Primeiro Encontro de tecnologia pensado a partir da{" "}
+                <h1 className="font-sora mt-8 text-3xl font-extrabold leading-tight sm:text-3xl lg:text-4xl">
+                    Engenharia de Software na {" "}
                     <span className="text-eco-green">Amazônia</span>
                 </h1>
+                <h2 className="font-sora mt-8 text-xs font-extrabold leading-tight sm:text-3xl lg:text-xl">
+                    Primeiro Encontro de tecnologia pensado a partir da{" "}
+                    <span className="text-eco-green">Amazônia</span>
+                </h2>
 
                 <p className="font-sora mt-6 max-w-xl text-base text-eco-cream-light sm:text-lg">
                     Dois dias de palestras, minicurso e trocas entre estudantes,

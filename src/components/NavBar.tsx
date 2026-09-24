@@ -11,16 +11,16 @@ const NavBar = () => {
    <header className="sticky top-0 z-50 w-full bg-eco-blue">
       <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between gap-8 px-6 py-4 lg:gap-12 lg:px-8">
         {/* Logo + nome do evento */}
-        <div className="flex min-w-0 items-center gap-3">
-          <img src={ecoLogo} alt="Logo ESA" className="h-6 w-6 shrink-0" />
-          <span className="font-inter text-lg font-black leading-none text-eco-cream-light">
+        <div className="flex min-w-0 shrink items-center gap-3">
+          <img src={ecoLogo} alt="Logo ESA" className="h-9 w-9 shrink-0" />
+          <span className="min-w-0 truncate whitespace-nowrap font-inter text-lg font-black leading-none text-eco-cream-light">
             <span className="sm:hidden">EcoTech</span>
-            <span className="hidden sm:inline">Engenharia de Software na Amazônia</span>
+           
           </span>
         </div>
 
         {/* Menu para telas médias/grandes */}
-        <nav className="hidden items-center gap-10 lg:flex">
+        <nav className="hidden shrink-0 items-center gap-10 lg:flex">
           {links.map((link) => (
             <NavLink
               key={link.to}

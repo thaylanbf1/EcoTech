@@ -7,7 +7,7 @@ export const ITENS_EVENTO = [
   {
     titulo: "Onde",
     descricao:
-      "Na UEPA — Campus Ananindeua, às margens da BR-316. Realização da Universidade do Estado do Pará em parceria com grupos de pesquisa e extensão.",
+      "Na UEPA — Campus Ananindeua, ao lado da Usina da Paz no Icuí-Guajará. Realização da Universidade do Estado do Pará em parceria com grupos de pesquisa e extensão.",
   },
   {
     titulo: "Palestrantes",
