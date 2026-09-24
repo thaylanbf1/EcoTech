@@ -12,6 +12,7 @@ import Inscricao from "../pages/Inscricao"
 import PerfilPalestrante from "../pages/PerfilPalestrante"
 import Palestras from "../pages/Palestras"
 import PerfilPalestra from "../pages/PerfilPalestras"
+import Acessibilidade from "../pages/Acessibilidade"
 
 function AppRoutes() {
   const location = useLocation()
@@ -29,6 +30,7 @@ function AppRoutes() {
           <Route path="/local" element={<Local/>}/>
           <Route path="/patrocinadores" element={<Patrocinadores/>}/>
           <Route path="/parceiros" element={<Parceiros/>}/>
+          <Route path="/acessibilidade" element={<Acessibilidade/>}/>
           <Route path="/inscricao" element={<Inscricao/>}/>
           <Route path="/palestrantes/:slug" element={<PerfilPalestrante/>}/>
           <Route path="/palestras" element={<Palestras/>}/>
