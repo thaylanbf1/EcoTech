@@ -1,28 +1,12 @@
 import { isAxiosError } from "axios"
 import { post } from "./api"
 import type { Credenciais, LoginResposta, Usuario } from "../types/auth"
+import { USAR_MOCK, USUARIOS_MOCK } from "../mocks/mock"
 
 // Enquanto o backend não existe, o login é simulado. O mock só liga em
 // desenvolvimento (npm run dev) e com VITE_USE_MOCK=true no .env, para
 // que as contas de teste nunca funcionem no site publicado.
-const USAR_MOCK = import.meta.env.DEV && import.meta.env.VITE_USE_MOCK === "true"
 
-const USUARIOS_MOCK: (Usuario & { senha: string })[] = [
-  {
-    id: "1",
-    nome: "Participante Teste",
-    email: "participante@ecotech.com",
-    senha: "123456",
-    perfil: "participante",
-  },
-  {
-    id: "2",
-    nome: "Admin EcoTech",
-    email: "admin@ecotech.com",
-    senha: "admin123",
-    perfil: "admin",
-  },
-]
 
 async function loginMock({ email, senha, perfil }: Credenciais): Promise<LoginResposta> {
   await new Promise((resolve) => setTimeout(resolve, 600))
