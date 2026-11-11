@@ -14,6 +14,31 @@ export const esquemaSenha = z
   .min(TAMANHO_MINIMO_SENHA, `A senha precisa ter pelo menos ${TAMANHO_MINIMO_SENHA} caracteres.`)
   .max(200)
 
+const esquemaNome = texto(120).min(3, "Informe o nome completo.")
+const esquemaInstituicao = texto(160)
+
+export const esquemaCadastroAutor = z.object({
+  nome: esquemaNome,
+  email: esquemaEmail,
+  instituicao: esquemaInstituicao.min(2, "Informe a instituição."),
+  senha: esquemaSenha,
+  aceite: z.literal(true, "Aceite os termos de uso para continuar."),
+})
+
+export const esquemaConta = z.object({ nome: esquemaNome, instituicao: esquemaInstituicao })
+
+export const PERFIS = ["participante", "autor", "avaliador", "admin"] as const
+
+export const esquemaNovoUsuario = z.object({
+  nome: esquemaNome,
+  email: esquemaEmail,
+  instituicao: esquemaInstituicao,
+  perfil: z.enum(PERFIS),
+  senha: esquemaSenha,
+})
+
+export const esquemaPerfil = z.object({ perfil: z.enum(PERFIS) })
+
 export const esquemaParticipante = z
   .object({
     nome: texto(120).min(3, "Informe o nome completo."),
@@ -145,3 +170,31 @@ export function validar<T>(esquema: z.ZodType<T>, dados: unknown): T {
   }
   return resultado.data
 }
+
+// ---------- artigos ----------
+
+const esquemaCoautor = z.object({ nome: esquemaNome, email: esquemaEmail, instituicao: esquemaInstituicao })
+
+// Rascunho: só o título é obrigatório. O resto é conferido ao enviar.
+export const esquemaSubmissao = z.object({
+  titulo: texto(250).min(3, "Informe o título do artigo."),
+  resumo: texto(3000),
+  palavrasChave: z.array(texto(40).min(1)).max(8, "Use no máximo 8 palavras-chave."),
+  coautores: z.array(esquemaCoautor).max(10, "Informe no máximo 10 coautores."),
+})
+
+export const RECOMENDACOES = ["aprovar", "aprovar_ressalvas", "reprovar"] as const
+
+export const esquemaAvaliacao = z.object({
+  parecer: texto(5000),
+  recomendacao: z.enum(RECOMENDACOES).nullable(),
+})
+
+export const esquemaAtribuicao = z.object({
+  avaliadorIds: z.array(z.uuid()).min(1, "Selecione pelo menos um avaliador.").max(5),
+  prazo: data,
+})
+
+export const esquemaLiberacao = z.object({
+  justificativa: texto(300).min(5, "Escreva a justificativa."),
+})

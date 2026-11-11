@@ -5,6 +5,8 @@ import { ErroHttp } from "./seguranca.ts"
 import { rotasAuth } from "./rotas/auth.ts"
 import { rotasPagamento, rotasPublicas, rotasParticipante } from "./rotas/inscricoes.ts"
 import { rotasAdmin } from "./rotas/admin.ts"
+import { rotasAdminArtigos } from "./rotas/adminArtigos.ts"
+import { rotasArquivo, rotasAutor, rotasAvaliador } from "./rotas/artigos.ts"
 
 export const app = express()
 
@@ -27,6 +29,10 @@ api.get("/saude", (_req, res) => {
 api.use("/auth", rotasAuth)
 api.use("/minha-inscricao", rotasParticipante)
 api.use("/admin", rotasAdmin)
+api.use("/admin", rotasAdminArtigos)
+api.use("/autor", rotasAutor)
+api.use("/avaliador", rotasAvaliador)
+api.use(rotasArquivo)
 api.use("/pagamentos", rotasPagamento)
 api.use(rotasPublicas)
 api.use((_req, _res, next) => next(new ErroHttp(404, "Rota não encontrada.")))
@@ -36,13 +42,19 @@ app.use("/api", api)
 // sem detalhes para o navegador (o detalhe fica só no log do servidor).
 // O Express só reconhece o tratador de erros se ele tiver os 4 parâmetros
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((erro: unknown, _req: Request, res: Response, _next: NextFunction) => {
+app.use((erro: unknown, req: Request, res: Response, _next: NextFunction) => {
   if (erro instanceof ErroHttp) {
     res.status(erro.status).json({ mensagem: erro.message })
     return
   }
   if (erro instanceof SyntaxError && "body" in erro) {
     res.status(400).json({ mensagem: "Dados inválidos." })
+    return
+  }
+  // Corpo acima do limite (ex.: PDF de mais de 10 MB)
+  if (erro instanceof Error && "type" in erro && erro.type === "entity.too.large") {
+    const pdf = req.headers["content-type"] === "application/pdf"
+    res.status(413).json({ mensagem: pdf ? "O PDF pode ter no máximo 10 MB." : "Os dados enviados são grandes demais." })
     return
   }
   console.error(erro)

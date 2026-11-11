@@ -24,6 +24,7 @@ import Etapas from "../components/inscricao/Etapas"
 import PagamentoPix from "../components/inscricao/PagamentoPix"
 import { ResumoDados, SelosAcessibilidade } from "../components/inscricao/Leitura"
 import type { DadosParticipante, Inscricao as InscricaoFeita } from "../types/inscricao"
+import { INICIO_DO_PERFIL } from "../consts/artigos"
 
 export default function Inscricao() {
   const { usuario, iniciarSessao } = useAuth()
@@ -52,7 +53,7 @@ export default function Inscricao() {
 
   // Quem já tem conta vai direto para a sua área (exceto logo após se inscrever)
   if (usuario && !inscricao) {
-    return <Navigate to={usuario.perfil === "admin" ? "/admin" : "/minha-conta"} replace />
+    return <Navigate to={INICIO_DO_PERFIL[usuario.perfil]} replace />
   }
 
   const irParaMinicursos = (e: FormEvent<HTMLFormElement>) => {

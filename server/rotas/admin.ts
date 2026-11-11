@@ -2,7 +2,7 @@ import { Router } from "express"
 import { z } from "zod"
 import { pool, transacao } from "../db.ts"
 import { ErroHttp, exigirLogin } from "../seguranca.ts"
-import { eventoEncerrado, listarAtividades, obterSite, obterSobre, todasInscricoes } from "../repositorio.ts"
+import { eventoEncerrado, listarAtividades, listarEventosAnteriores, obterSite, obterSobre, todasInscricoes } from "../repositorio.ts"
 import { esquemaAtividade, esquemaEvento, esquemaSite, esquemaSobre, validar } from "../validacao.ts"
 
 // Todas as rotas daqui exigem uma sessão de administrador
@@ -99,13 +99,16 @@ rotasAdmin.post("/evento/encerrar", async (_req, res) => {
   res.json(await obterSite())
 })
 
+// Reabre o site para um novo evento. Os textos e cores do último ficam como
+// ponto de partida para o admin editar.
+rotasAdmin.post("/evento/novo", async (_req, res) => {
+  const { rowCount } = await pool.query("update evento set status = 'ativo' where id = 1 and status = 'encerrado'")
+  if (!rowCount) throw new ErroHttp(409, "Já existe um evento ativo.")
+  res.json(await obterSite())
+})
+
 rotasAdmin.get("/eventos-anteriores", async (_req, res) => {
-  const { rows } = await pool.query(
-    `select id, nome, encerrado_em as "encerradoEm", data_inicio as "dataInicio", data_fim as "dataFim",
-            local, inscritos, atividades
-       from eventos_anteriores order by encerrado_em desc`
-  )
-  res.json(rows.map((r) => ({ ...r, encerradoEm: r.encerradoEm.toISOString() })))
+  res.json(await listarEventosAnteriores())
 })
 
 rotasAdmin.put("/sobre", async (req, res) => {

@@ -13,7 +13,7 @@ import {
   limitarTentativas,
   novoToken,
 } from "../seguranca.ts"
-import { esquemaSenha, validar } from "../validacao.ts"
+import { esquemaCadastroAutor, esquemaConta, esquemaSenha, validar } from "../validacao.ts"
 
 export const rotasAuth = Router()
 
@@ -32,7 +32,7 @@ rotasAuth.post(
   async (req, res) => {
     const { email, senha } = validar(esquemaLogin, req.body)
     const { rows } = await pool.query(
-      "select id, nome, email, perfil, senha_hash from usuarios where email = $1",
+      "select id, nome, email, perfil, instituicao, senha_hash from usuarios where email = $1",
       [email.trim().toLowerCase()]
     )
     const conta = rows[0]
@@ -41,9 +41,40 @@ rotasAuth.post(
     if (!conta || !senhaOk) throw CREDENCIAIS_INVALIDAS
 
     const token = await criarSessao(conta.id)
-    res.json({ token, usuario: { id: conta.id, nome: conta.nome, email: conta.email, perfil: conta.perfil } })
+    const usuario = { id: conta.id, nome: conta.nome, email: conta.email, perfil: conta.perfil, instituicao: conta.instituicao }
+    res.json({ token, usuario })
   }
 )
+
+// Cadastro público: cria sempre uma conta de autor. Avaliador e admin só o
+// admin define. Aqui o e-mail repetido tem mensagem própria (pedido do
+// design): o autor precisa saber que já tem conta para entrar ou recuperar.
+rotasAuth.post("/cadastro", limitarTentativas({ maximo: 20, janelaMin: 60 }), async (req, res) => {
+  const dados = validar(esquemaCadastroAutor, req.body)
+  const { rowCount } = await pool.query(
+    `insert into usuarios (nome, email, instituicao, perfil, senha_hash) values ($1, $2, $3, 'autor', $4)
+     on conflict (email) do nothing`,
+    [dados.nome, dados.email, dados.instituicao, await gerarHashSenha(dados.senha)]
+  )
+  if (!rowCount) throw new ErroHttp(409, "Este e-mail já está cadastrado. Tente entrar ou recuperar a senha.")
+
+  enviarEmail(
+    dados.email,
+    "Sua conta de autor foi criada",
+    `Olá, ${dados.nome}!\n\nSua conta de autor foi criada. Entre em ${urlDoSite()}/login para submeter e acompanhar seus trabalhos.`
+  ).catch((erro) => console.error("[cadastro] Falha ao enviar e-mail:", erro))
+  res.status(201).json({ email: dados.email })
+})
+
+// Nome e instituição da própria conta (o e-mail não muda por aqui)
+rotasAuth.put("/conta", exigirLogin(), async (req, res) => {
+  const { nome, instituicao } = validar(esquemaConta, req.body)
+  const { rows } = await pool.query(
+    "update usuarios set nome = $1, instituicao = $2 where id = $3 returning id, nome, email, perfil, instituicao",
+    [nome, instituicao, req.usuario!.id]
+  )
+  res.json(rows[0])
+})
 
 rotasAuth.get("/me", exigirLogin(), (req, res) => {
   res.json(req.usuario)

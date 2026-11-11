@@ -1,3 +1,4 @@
+import { z } from "zod"
 import { Router } from "express"
 import { pool, transacao } from "../db.ts"
 import {
@@ -17,6 +18,8 @@ import {
   obterSobre,
   inscricaoDoUsuario,
   listarAtividades,
+  listarEventosAnteriores,
+  obterEventoAnterior,
   obterEvento,
   salvarAtividadesDaInscricao,
 } from "../repositorio.ts"
@@ -38,6 +41,17 @@ rotasPublicas.get("/site", async (_req, res) => {
 
 rotasPublicas.get("/sobre", async (_req, res) => {
   res.json(await obterSobre())
+})
+
+// Público: a home sem evento ativo leva para esta lista
+rotasPublicas.get("/eventos-anteriores", async (_req, res) => {
+  res.json(await listarEventosAnteriores())
+})
+
+rotasPublicas.get("/eventos-anteriores/:id", async (req, res) => {
+  const evento = z.uuid().safeParse(req.params.id).success ? await obterEventoAnterior(req.params.id) : null
+  if (!evento) throw new ErroHttp(404, "Evento não encontrado.")
+  res.json(evento)
 })
 
 rotasPublicas.get("/atividades", async (_req, res) => {

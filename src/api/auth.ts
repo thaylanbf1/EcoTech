@@ -1,9 +1,9 @@
 import { isAxiosError } from "axios"
-import { get, post } from "./api"
+import { get, post, put } from "./api"
 import { axiosClient } from "./axiosClient"
 import { comTratamento, erroDaApi } from "./erros"
 import { lerSessao } from "../helpers/sessao"
-import type { Credenciais, LoginResposta, Usuario } from "../types/auth"
+import type { Credenciais, DadosCadastro, LoginResposta, Usuario } from "../types/auth"
 import { USAR_MOCK } from "../mocks/mock"
 import * as servidorMock from "../mocks/servidor"
 
@@ -76,4 +76,13 @@ export async function redefinirSenha(token: string, senha: string): Promise<void
     }
     throw erroDaApi(erro)
   }
+}
+
+// Cria uma conta de autor. E-mail repetido volta como erro com mensagem própria.
+export async function cadastrarAutor(dados: DadosCadastro): Promise<void> {
+  await comTratamento(() => post("/auth/cadastro", dados))
+}
+
+export function atualizarConta(dados: { nome: string; instituicao: string }): Promise<Usuario> {
+  return comTratamento(() => put<Usuario>("/auth/conta", dados))
 }

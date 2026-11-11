@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react"
 import { encerrarEvento, salvarSite } from "../../services/site"
 import { ROTAS_CONHECIDAS } from "../../consts/site"
 import { BOTAO_PERIGO, BOTAO_PRIMARIO, BOTAO_SECUNDARIO, CARTAO } from "../../consts/estilos"
 import SeletorImagem from "./SeletorImagem"
-import { variaveisCss } from "../../helpers/site"
 import { Campo, MensagemErro, MensagemSucesso } from "../../components/form"
-import HomeView from "../../components/HomeView"
+import PreviaHome from "../../components/PreviaHome"
 import type { ConfigSite, ItemMenu, SiteResposta, TemplateSite } from "../../types/site"
 
 interface Props {
@@ -19,31 +18,6 @@ const TEMPLATES: { id: TemplateSite; nome: string }[] = [
   { id: "moderno", nome: "Moderno" },
   { id: "minimalista", nome: "Minimalista" },
 ]
-
-const LARGURA_PREVIA = 1200
-
-// Home em tamanho real, reduzida para caber na coluna
-function Previa({ config, dataInicio }: { config: ConfigSite; dataInicio: string }) {
-  const caixa = useRef<HTMLDivElement>(null)
-  const [escala, setEscala] = useState(0.3)
-  useEffect(() => {
-    const el = caixa.current
-    if (!el) return
-    const obs = new ResizeObserver(() => setEscala(el.clientWidth / LARGURA_PREVIA))
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
-  return (
-    <div ref={caixa} className="w-full overflow-hidden rounded-xl border border-eco-blue/15" style={{ height: 640 * escala }}>
-      <div
-        inert
-        style={{ ...variaveisCss(config), width: LARGURA_PREVIA, transform: `scale(${escala})`, transformOrigin: "top left" }}
-      >
-        <HomeView config={config} dataInicio={dataInicio} />
-      </div>
-    </div>
-  )
-}
 
 export default function AdminSite({ site, onSalvo }: Props) {
   const { status, dataInicio, ...inicial } = site
@@ -178,7 +152,7 @@ export default function AdminSite({ site, onSalvo }: Props) {
             <h2 className="font-sora text-lg font-bold text-eco-blue">Pré-visualização</h2>
             <span className={`font-sora rounded-full px-3 py-1 text-[11px] font-bold ${encerrado ? "bg-red-100 text-red-700" : "bg-green-100 text-eco-green-dark"}`}>{encerrado ? "Encerrado" : "Ativo"}</span>
           </div>
-          <Previa config={form} dataInicio={dataInicio} />
+          <PreviaHome config={form} dataInicio={dataInicio} />
         </div>
 
         <MensagemErro>{msg.erro}</MensagemErro>
