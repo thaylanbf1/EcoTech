@@ -63,21 +63,22 @@ declare module "express-serve-static-core" {
 
 // Lê o "Authorization: Bearer <token>" e descobre de quem é a sessão.
 // O perfil vem sempre do banco, nunca do que o navegador diz.
-export function exigirLogin(perfil?: Perfil) {
+export function exigirLogin(perfil?: Perfil | Perfil[]) {
+  const permitidos = perfil === undefined ? null : Array.isArray(perfil) ? perfil : [perfil]
   return async (req: Request, _res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.match(/^Bearer (.+)$/)?.[1]
     if (!token) return next(new ErroHttp(401, "Sua sessão expirou. Entre novamente."))
 
     const tokenHash = hashToken(token)
     const { rows } = await pool.query<Usuario>(
-      `select u.id, u.nome, u.email, u.perfil
+      `select u.id, u.nome, u.email, u.perfil, u.instituicao
          from sessoes s join usuarios u on u.id = s.usuario_id
         where s.token_hash = $1 and s.expira_em > now()`,
       [tokenHash]
     )
     const usuario = rows[0]
     if (!usuario) return next(new ErroHttp(401, "Sua sessão expirou. Entre novamente."))
-    if (perfil && usuario.perfil !== perfil) return next(new ErroHttp(403, "Acesso não permitido."))
+    if (permitidos && !permitidos.includes(usuario.perfil)) return next(new ErroHttp(403, "Acesso não permitido."))
 
     req.usuario = usuario
     req.tokenHash = tokenHash

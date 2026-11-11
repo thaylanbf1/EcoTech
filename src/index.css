@@ -13,6 +13,9 @@
     --color-eco-green-light: #008660;
     --color-eco-blue-soft: #ebf0f7;
     --color-eco-field: #f8f6f1;
+    /* Botões de ação do login e dos painéis (fixo: não muda com o tema do evento) */
+    --color-eco-orange: #e0722c;
+    --color-eco-orange-soft: #fdf0e6;
 
     --font-sora: "Sora", sans-serif;
     --font-inter: "Inter", sans-serif;

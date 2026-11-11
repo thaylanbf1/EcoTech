@@ -17,7 +17,9 @@
     "start:api": "tsx server/index.ts",
     "db:setup": "tsx --env-file=.env server/db/setup.ts",
     "db:admin": "tsx --env-file=.env server/db/criar-admin.ts",
-    "db:popular": "tsx --env-file=.env server/db/popular.ts"
+    "db:popular": "tsx --env-file=.env server/db/popular.ts",
+    "db:artigos": "tsx --env-file=.env server/db/popular-artigos.ts",
+    "db:anteriores": "tsx --env-file=.env server/db/popular-anteriores.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

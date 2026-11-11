@@ -39,4 +39,6 @@ export interface EventoAnterior {
   local: string
   inscritos: number
   atividades: number
+  // Como o site estava ao encerrar (textos, cores, template e menu)
+  site: ConfigSite
 }

@@ -117,3 +117,58 @@ create table if not exists eventos_anteriores (
 
 -- Conteúdo da página Sobre (texto, carrossel, parceiros, patrocinadores)
 alter table evento add column if not exists sobre jsonb;
+
+-- ---------- Submissão de artigos e avaliação Ad-Hoc ----------
+
+alter table usuarios drop constraint if exists usuarios_perfil_check;
+alter table usuarios add constraint usuarios_perfil_check
+  check (perfil in ('participante', 'admin', 'autor', 'avaliador'));
+alter table usuarios add column if not exists instituicao text not null default '';
+
+-- O PDF fica no próprio banco (bytea): simples e sem outro serviço para
+-- configurar. O limite de tamanho é conferido na rota de envio.
+create table if not exists submissoes (
+  id               uuid primary key default gen_random_uuid(),
+  autor_id         uuid not null references usuarios(id) on delete cascade,
+  titulo           text not null,
+  resumo           text not null default '',
+  palavras_chave   text[] not null default '{}',
+  -- Coautores não precisam ter conta: [{ nome, email, instituicao }]
+  coautores        jsonb not null default '[]',
+  status           text not null default 'rascunho' check (status in
+                     ('rascunho', 'submetido', 'em_avaliacao', 'aprovado', 'aprovado_ressalvas', 'reprovado')),
+  arquivo_nome     text,
+  arquivo          bytea,
+  arquivo_tamanho  int,
+  arquivo_paginas  int,
+  submetido_em     timestamptz,
+  criado_em        timestamptz not null default now()
+);
+create index if not exists submissoes_autor_idx on submissoes (autor_id);
+
+-- Um avaliador por linha. "enviada" fica bloqueada até o admin liberar
+-- ("edicao_liberada"); ao reenviar, volta para "enviada".
+create table if not exists atribuicoes (
+  id                       uuid primary key default gen_random_uuid(),
+  submissao_id             uuid not null references submissoes(id) on delete cascade,
+  avaliador_id             uuid not null references usuarios(id) on delete cascade,
+  prazo                    date not null,
+  status                   text not null default 'pendente' check (status in
+                             ('pendente', 'rascunho', 'enviada', 'edicao_liberada')),
+  parecer                  text not null default '',
+  recomendacao             text check (recomendacao in ('aprovar', 'aprovar_ressalvas', 'reprovar')),
+  enviada_em               timestamptz,
+  alteracao_solicitada_em  timestamptz,
+  criado_em                timestamptz not null default now(),
+  unique (submissao_id, avaliador_id)
+);
+create index if not exists atribuicoes_avaliador_idx on atribuicoes (avaliador_id);
+
+-- Histórico de cada vez que o admin liberou a edição de uma avaliação
+create table if not exists liberacoes_avaliacao (
+  id             uuid primary key default gen_random_uuid(),
+  atribuicao_id  uuid not null references atribuicoes(id) on delete cascade,
+  admin_id       uuid references usuarios(id) on delete set null,
+  justificativa  text not null,
+  criado_em      timestamptz not null default now()
+);

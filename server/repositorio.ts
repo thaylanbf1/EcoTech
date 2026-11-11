@@ -5,7 +5,7 @@ import { pool, type Conexao } from "./db.ts"
 import { SITE_PADRAO } from "../src/consts/site.ts"
 import { SOBRE_PADRAO } from "../src/consts/sobre.ts"
 import type { ConfigSobre } from "../src/types/sobre.ts"
-import type { ConfigSite, SiteResposta } from "../src/types/site.ts"
+import type { ConfigSite, EventoAnterior, SiteResposta } from "../src/types/site.ts"
 import type { AtividadeComVagas, DadosEvento, Inscricao } from "../src/types/inscricao.ts"
 
 export async function obterEvento(conexao: Conexao = pool): Promise<DadosEvento> {
@@ -104,6 +104,28 @@ export async function obterSite(conexao: Conexao = pool): Promise<SiteResposta> 
 export async function eventoEncerrado(conexao: Conexao = pool) {
   const { rows } = await conexao.query("select status from evento where id = 1")
   return rows[0]?.status === "encerrado"
+}
+
+const SQL_EVENTO_ANTERIOR = `
+  select id, nome, encerrado_em as "encerradoEm", data_inicio as "dataInicio", data_fim as "dataFim",
+         local, inscritos, atividades, site
+    from eventos_anteriores`
+
+// O site salvo é completado com os padrões, como em obterSite
+const eventoAnterior = (r: Record<string, unknown>): EventoAnterior => ({
+  ...(r as unknown as EventoAnterior),
+  encerradoEm: (r.encerradoEm as Date).toISOString(),
+  site: { ...SITE_PADRAO, ...((r.site ?? {}) as Partial<ConfigSite>) },
+})
+
+export async function listarEventosAnteriores(conexao: Conexao = pool): Promise<EventoAnterior[]> {
+  const { rows } = await conexao.query(`${SQL_EVENTO_ANTERIOR} order by encerrado_em desc`)
+  return rows.map(eventoAnterior)
+}
+
+export async function obterEventoAnterior(id: string, conexao: Conexao = pool): Promise<EventoAnterior | null> {
+  const { rows } = await conexao.query(`${SQL_EVENTO_ANTERIOR} where id = $1`, [id])
+  return rows[0] ? eventoAnterior(rows[0]) : null
 }
 
 export async function obterSobre(conexao: Conexao = pool): Promise<ConfigSobre> {
