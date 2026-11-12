@@ -95,7 +95,7 @@ export default function Login() {
       descricao="Um único acesso para todos os perfis. O que você pode ver e fazer depende do seu perfil de usuário."
       lateral={
         <div className="flex flex-col gap-3">
-          {(["autor", "avaliador", "admin"] as const).map((p) => (
+          {(["participante", "autor", "avaliador", "admin"] as const).map((p) => (
             <CaixaLateral key={p} titulo={PERFIS[p].rotulo} ponto>
               {PERFIS[p].descricao}
             </CaixaLateral>
@@ -156,6 +156,13 @@ export default function Login() {
         </button>
 
         <div className="font-inter flex flex-col gap-1 text-sm text-eco-gray">
+          <p>
+            Vai participar do evento?{" "}
+            <Link to="/inscricao" className="font-semibold text-eco-orange hover:underline">
+              Faça sua inscrição
+            </Link>
+            . A senha criada na inscrição é a que você usa aqui.
+          </p>
           <p>
             Quer submeter um trabalho?{" "}
             <Link to="/cadastro" className="font-semibold text-eco-orange hover:underline">

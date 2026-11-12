@@ -5,6 +5,7 @@ import { useSite } from "../hooks/useSite";
 import { useAuth } from "../hooks/useAuth";
 import ecoLogo from '../assets/exo_logo_branca.png'
 import type { Perfil } from "../types/auth";
+import { linkExterno } from "../consts/site";
 
 
 const AREA_LOGADA: Record<Perfil, { to: string; label: string }> = {
@@ -47,7 +48,11 @@ const NavBar = () => {
 
         {/* Menu para telas médias/grandes */}
         <nav className="hidden shrink-0 items-center gap-10 xl:flex">
-          {links.map((link) => (
+          {links.map((link) => linkExterno(link.to) ? (
+            <a key={link.to} href={link.to} target="_blank" rel="noopener noreferrer" className="font-inter border-y-2 border-transparent py-2 text-[16px] font-bold text-white transition-opacity hover:opacity-80">
+              {link.label}
+            </a>
+          ) : (
             <NavLink
               key={link.to}
               to={link.to}
@@ -109,7 +114,11 @@ const NavBar = () => {
       {/* Menu mobile: só renderiza a lista quando "open" é true */}
       {open && (
         <nav className="flex flex-col gap-1 bg-eco-blue-dark px-6 pb-4 xl:hidden">
-          {links.map((link) => (
+          {links.map((link) => linkExterno(link.to) ? (
+            <a key={link.to} href={link.to} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 font-inter text-white">
+              {link.label}
+            </a>
+          ) : (
             <NavLink
               key={link.to}
               to={link.to}

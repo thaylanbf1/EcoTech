@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { CAMPOS_CATEGORIA, CATEGORIAS, OPCOES_ACESSIBILIDADE, TAMANHO_MINIMO_SENHA } from "../src/consts/inscricao.ts"
 import { ErroHttp } from "./seguranca.ts"
+import { IDS_TEMPLATES_PAGINA, PREFIXO_PAGINA_LIVRE, TEMPLATES_PRONTOS, templateDoItem, templateLivre } from "../src/consts/site.ts"
 
 // Tudo que chega do navegador passa por aqui antes de tocar no banco.
 // As regras são as mesmas das telas, mas o servidor não confia nelas.
@@ -116,6 +117,48 @@ const imagem = z
   .max(1_400_000, "Imagem muito pesada.")
   .refine((v) => v === "" || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(v), "Imagem inválida.")
 
+const urlExterna = z
+  .string()
+  .trim()
+  .max(500)
+  .refine((v) => v === "" || /^https?:\/\/[^\s<>"]+$/i.test(v), "Link inválido. Use um endereço que comece com https://")
+
+// Conteúdo das páginas livres (texto, cartões, perguntas, link)
+const conteudoPagina = z.object({
+  titulo: texto(150),
+  texto: texto(5000),
+  imagem,
+  blocos: z
+    .array(z.object({ titulo: texto(120), descricao: texto(1500), imagem }))
+    .max(30, "Uma página pode ter no máximo 30 cartões ou perguntas."),
+  url: urlExterna,
+})
+
+const itemMenu = z
+  .object({
+    id: texto(60).min(1),
+    rotulo: texto(30).min(1, "Todo item do menu precisa de um nome."),
+    to: z
+      .string()
+      .max(500)
+      .refine((v) => /^\/[a-z0-9\-/]*$/i.test(v) || /^https?:\/\/[^\s<>"]+$/i.test(v), "Rota inválida."),
+    visivel: z.boolean(),
+    template: z.enum(IDS_TEMPLATES_PAGINA).optional(),
+    conteudo: conteudoPagina.optional(),
+  })
+  .superRefine((item, ctx) => {
+    const template = templateDoItem(item)
+    const erro = (message: string) => ctx.addIssue({ code: "custom", message })
+    if (template === "link") {
+      if (!item.conteudo?.url) erro(`Informe o endereço do link "${item.rotulo}".`)
+      else if (item.to !== item.conteudo.url) erro("Rota inválida.")
+    } else if (templateLivre(template)) {
+      if (!item.to.startsWith(PREFIXO_PAGINA_LIVRE) || item.to.length <= PREFIXO_PAGINA_LIVRE.length) erro("Rota inválida.")
+    } else if (item.to !== TEMPLATES_PRONTOS.find((t) => t.id === template)!.to) {
+      erro("Rota inválida.")
+    }
+  })
+
 export const esquemaSite = z.object({
   titulo: texto(150).min(1, "Informe o título principal."),
   descricao: texto(400).min(1, "Informe a descrição."),
@@ -128,16 +171,13 @@ export const esquemaSite = z.object({
   logoUrl: imagem,
   bannerUrl: imagem,
   menu: z
-    .array(
-      z.object({
-        id: texto(40).min(1),
-        rotulo: texto(30).min(1, "Todo item do menu precisa de um nome."),
-        to: z.string().regex(/^\/[a-z0-9\-/]*$/i, "Rota inválida."),
-        visivel: z.boolean(),
-      })
-    )
+    .array(itemMenu)
     .min(1)
-    .max(20),
+    .max(20)
+    .refine((menu) => {
+      const internas = menu.map((i) => i.to).filter((to) => to.startsWith("/"))
+      return new Set(internas).size === internas.length
+    }, "Dois itens do menu levam para a mesma página. Mude o nome de um deles."),
 })
 
 const logo = z

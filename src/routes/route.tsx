@@ -15,6 +15,7 @@ import PerfilPalestra from "../pages/PerfilPalestras"
 import Acessibilidade from "../pages/Acessibilidade"
 import EventosAnteriores from "../pages/EventosAnteriores"
 import EventoAnteriorDetalhe from "../pages/EventoAnteriorDetalhe"
+import PaginaLivre from "../pages/PaginaLivre"
 import Login from "../pages/Login"
 import Cadastro from "../pages/Cadastro"
 import EsqueciSenha from "../pages/EsqueciSenha"
@@ -60,7 +61,9 @@ function AppRoutes() {
   return (
     <>
       {!semMoldura && <NavBar/>}
-      <main className="w-full min-w-0 overflow-x-hidden">
+      {/* clip, e não hidden: hidden transforma o main em área de rolagem e o
+          menu lateral do painel (sticky) deixa de acompanhar a página */}
+      <main className="w-full min-w-0 overflow-x-clip">
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/sobre" element={<Sobre/>}/>
@@ -73,6 +76,7 @@ function AppRoutes() {
           <Route path="/eventos-anteriores" element={<EventosAnteriores/>}/>
           <Route path="/eventos-anteriores/:id" element={<EventoAnteriorDetalhe/>}/>
           <Route path="/inscricao" element={<Inscricao/>}/>
+          <Route path="/pagina/:slug" element={<PaginaLivre/>}/>
           <Route path="/palestrantes/:slug" element={<PerfilPalestrante/>}/>
           <Route path="/palestras" element={<Palestras/>}/>
           <Route path="/palestras/:slug" element={<PerfilPalestra/>}/>

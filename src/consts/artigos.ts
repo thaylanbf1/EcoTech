@@ -48,7 +48,7 @@ export const PERFIS: Record<Perfil, { rotulo: string; descricao: string; cor: st
   autor: { rotulo: "Autor", descricao: "Submete e acompanha seus trabalhos", cor: "bg-eco-blue-soft text-eco-blue" },
   avaliador: { rotulo: "Avaliador Ad-Hoc", descricao: "Avalia os trabalhos atribuídos a você", cor: "bg-eco-orange-soft text-orange-700" },
   admin: { rotulo: "Administrador", descricao: "Gerencia evento, usuários e avaliações", cor: "bg-purple-100 text-purple-700" },
-  participante: { rotulo: "Participante", descricao: "Inscrito no evento", cor: "bg-green-100 text-green-700" },
+  participante: { rotulo: "Participante", descricao: "Acompanha a inscrição, o pagamento e os minicursos", cor: "bg-green-100 text-green-700" },
 }
 
 // Para onde cada perfil vai depois de entrar

@@ -1,10 +1,50 @@
 export type TemplateSite = "classico" | "moderno" | "minimalista"
 
+// Páginas prontas: o conteúdo vem do sistema (atividades, palestras, Sobre...)
+export type TemplatePronto =
+  | "inicio"
+  | "sobre"
+  | "cronograma"
+  | "palestras"
+  | "exposicoes"
+  | "local"
+  | "acessibilidade"
+  | "patrocinadores"
+  | "parceiros"
+  | "inscricao"
+
+// Páginas livres: o conteúdo é escrito no próprio item do menu
+export type TemplateLivre = "texto" | "cartoes" | "perguntas" | "link"
+
+export type TemplatePagina = TemplatePronto | TemplateLivre
+
+// Um cartão (template "cartoes") ou uma pergunta (template "perguntas")
+export interface BlocoPagina {
+  titulo: string
+  descricao: string
+  // Data URL; "" = sem imagem
+  imagem: string
+}
+
+// Conteúdo das páginas livres. Cada template usa só os campos dele.
+export interface ConteudoPagina {
+  titulo: string
+  texto: string
+  imagem: string
+  blocos: BlocoPagina[]
+  // Só no template "link"
+  url: string
+}
+
 export interface ItemMenu {
   id: string
   rotulo: string
+  // Rota interna (/cronograma, /pagina/minha-pagina) ou, no "link", o endereço externo
   to: string
   visivel: boolean
+  // Ausente nos menus salvos antes dos templates: sai da rota
+  template?: TemplatePagina
+  conteudo?: ConteudoPagina
 }
 
 // Tudo que o admin edita na identidade e na página inicial

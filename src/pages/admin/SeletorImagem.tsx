@@ -5,20 +5,22 @@ interface Props {
   rotulo: string
   valor: string
   maxLado: number
+  // Texto do quadro quando não há imagem
+  vazio?: string
   onChange: (v: string) => void
   onErro: (m: string) => void
 }
 
-export default function SeletorImagem({ rotulo, valor, maxLado, onChange, onErro }: Props) {
+export default function SeletorImagem({ rotulo, valor, maxLado, vazio = "Padrão", onChange, onErro }: Props) {
   return (
     <div className="flex items-center gap-4 rounded-xl bg-eco-field p-3">
       <div className="flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-eco-blue-soft">
-        {valor ? <img src={valor} alt="" className="h-full w-full object-contain" /> : <span className="font-sora text-[10px] text-eco-gray">Padrão</span>}
+        {valor ? <img src={valor} alt="" className="h-full w-full object-contain" /> : <span className="font-sora text-center text-[10px] text-eco-gray">{vazio}</span>}
       </div>
       <p className="font-sora flex-1 text-sm font-bold text-eco-blue">{rotulo}</p>
       {valor && <button type="button" onClick={() => onChange("")} className="font-sora cursor-pointer text-xs font-bold text-eco-gray underline">Remover</button>}
       <label className={`${BOTAO_SECUNDARIO} py-2!`}>
-        Trocar
+        {valor ? "Trocar" : "Escolher"}
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp"

@@ -9,6 +9,7 @@ import { Rotulo, Selo } from "../components/painel/Elementos"
 import { MensagemErro } from "../components/form"
 import { AVISO_INFO, CARTAO_PAINEL } from "../consts/estilos"
 import { formatarData } from "../helpers/formatar"
+import { nomeTemplate, templateDoItem } from "../consts/site"
 
 const nomeImagem = (url: string) => (!url ? "Padrão do site" : url.startsWith("data:") ? "Imagem enviada" : url.split("/").pop())
 
@@ -96,7 +97,10 @@ export default function EventoAnteriorDetalhe() {
                 <h2 className="font-sora text-lg font-bold text-eco-blue">Itens do menu</h2>
                 {site.menu.map((item) => (
                   <div key={item.id} className="flex items-center justify-between rounded-xl bg-eco-cream-light px-4 py-3">
-                    <span className={`font-inter ${item.visivel ? "text-eco-blue" : "text-eco-gray"}`}>{item.rotulo}</span>
+                    <span className={`font-inter ${item.visivel ? "text-eco-blue" : "text-eco-gray"}`}>
+                      {item.rotulo}
+                      <span className="ml-2 text-xs text-eco-gray">{nomeTemplate(templateDoItem(item))}</span>
+                    </span>
                     <Selo cor={item.visivel ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"}>
                       {item.visivel ? "Visível" : "Oculto"}
                     </Selo>

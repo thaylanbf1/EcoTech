@@ -1,12 +1,12 @@
 import { useState, type FormEvent } from "react"
-import { ArrowDown, ArrowUp, Trash2 } from "lucide-react"
 import { encerrarEvento, salvarSite } from "../../services/site"
-import { ROTAS_CONHECIDAS } from "../../consts/site"
 import { BOTAO_PERIGO, BOTAO_PRIMARIO, BOTAO_SECUNDARIO, CARTAO } from "../../consts/estilos"
 import SeletorImagem from "./SeletorImagem"
+import EditorMenu from "./EditorMenu"
+import { problemaNoMenu } from "../../helpers/site"
 import { Campo, MensagemErro, MensagemSucesso } from "../../components/form"
 import PreviaHome from "../../components/PreviaHome"
-import type { ConfigSite, ItemMenu, SiteResposta, TemplateSite } from "../../types/site"
+import type { ConfigSite, SiteResposta, TemplateSite } from "../../types/site"
 
 interface Props {
   site: SiteResposta
@@ -31,17 +31,10 @@ export default function AdminSite({ site, onSalvo }: Props) {
     setForm((f) => ({ ...f, [campo]: valor }))
     setMsg({ erro: "", ok: "" })
   }
-  const alterarItem = (i: number, parcial: Partial<ItemMenu>) =>
-    alterar("menu", form.menu.map((item, j) => (j === i ? { ...item, ...parcial } : item)))
-  const mover = (i: number, d: -1 | 1) => {
-    const menu = [...form.menu]
-    ;[menu[i], menu[i + d]] = [menu[i + d], menu[i]]
-    alterar("menu", menu)
-  }
-  const disponiveis = ROTAS_CONHECIDAS.filter((r) => !form.menu.some((m) => m.to === r.to))
-
   const salvar = async (e: FormEvent) => {
     e.preventDefault()
+    const problema = problemaNoMenu(form.menu)
+    if (problema) return setMsg({ erro: problema, ok: "" })
     setSalvando(true)
     setMsg({ erro: "", ok: "" })
     try {
@@ -113,36 +106,9 @@ export default function AdminSite({ site, onSalvo }: Props) {
         <div className={`${CARTAO} flex flex-col gap-3`}>
           <div>
             <h2 className="font-sora text-lg font-bold text-eco-blue">Itens do menu</h2>
-            <p className="font-sora mt-1 text-xs text-eco-gray">Ative, oculte, renomeie e reordene as seções do topo.</p>
+            <p className="font-sora mt-1 text-xs text-eco-gray">Ative, oculte, renomeie e reordene as seções do topo. Cada item usa um template: uma página pronta do site ou uma página livre, em que você escreve o conteúdo.</p>
           </div>
-          {form.menu.map((item, i) => (
-            <div key={item.id} className="flex items-center gap-2 rounded-xl bg-eco-field p-2">
-              <div className="flex flex-col">
-                <button type="button" aria-label="Subir" disabled={i === 0} onClick={() => mover(i, -1)} className="cursor-pointer text-eco-gray disabled:opacity-30"><ArrowUp size={14} /></button>
-                <button type="button" aria-label="Descer" disabled={i === form.menu.length - 1} onClick={() => mover(i, 1)} className="cursor-pointer text-eco-gray disabled:opacity-30"><ArrowDown size={14} /></button>
-              </div>
-              <input aria-label={`Nome do item ${item.to}`} value={item.rotulo} onChange={(e) => alterarItem(i, { rotulo: e.target.value })} className={`font-sora min-w-0 flex-1 rounded-lg border border-eco-blue/15 bg-white px-3 py-2 text-sm text-eco-blue ${item.visivel ? "" : "opacity-50"}`} />
-              <label className="font-sora flex cursor-pointer items-center gap-2 text-xs font-bold text-eco-blue">
-                <input type="checkbox" role="switch" checked={item.visivel} onChange={(e) => alterarItem(i, { visivel: e.target.checked })} />
-                {item.visivel ? "Visível" : "Oculto"}
-              </label>
-              <button type="button" aria-label={`Remover ${item.rotulo}`} onClick={() => alterar("menu", form.menu.filter((_, j) => j !== i))} className="cursor-pointer p-1 text-red-700"><Trash2 size={16} /></button>
-            </div>
-          ))}
-          {disponiveis.length > 0 && (
-            <select
-              aria-label="Adicionar item"
-              value=""
-              onChange={(e) => {
-                const r = disponiveis.find((d) => d.to === e.target.value)
-                if (r) alterar("menu", [...form.menu, { id: `${r.to.slice(1) || "inicio"}-${Date.now()}`, rotulo: r.rotulo, to: r.to, visivel: true }])
-              }}
-              className={`${BOTAO_SECUNDARIO} self-start`}
-            >
-              <option value="">+ Adicionar item</option>
-              {disponiveis.map((r) => <option key={r.to} value={r.to}>{r.rotulo}</option>)}
-            </select>
-          )}
+          <EditorMenu menu={form.menu} onChange={(m) => alterar("menu", m)} onErro={(m) => setMsg({ erro: m, ok: "" })} />
         </div>
       </div>
 
