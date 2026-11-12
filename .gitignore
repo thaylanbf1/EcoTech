@@ -24,3 +24,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Banco: schema e scripts ficam só na máquina de cada um
+server/db/
